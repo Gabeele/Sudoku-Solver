@@ -1,10 +1,18 @@
+# Author: Gavin Abeele 
+# Date July 2022
+# Project: Python application for backtracking and recussion to construct and solve a sudoku Board
+
+# Insperation and notable mentions:
+#     Tech with Tim --> https://www.techwithtim.net/tutorials/python-programming/sudoku-solver-backtracking/
+#     Kush from Medium --> https://medium.com/codex/building-a-sudoku-solver-and-generator-in-python-1-3-f29d3ede6b23
+
 import random as rand
 
 class Board:
 
     grid = [['.' for i in range(9)] for j in range(9)]
 
-    def print(self):
+    def print(self):                                # Prints the board to the console 
             for i in range(len(self.grid)):
                 if i % 3 == 0 and i != 0:
                     print("- - - - - - - - - - - ")
@@ -19,7 +27,7 @@ class Board:
                         print(str(self.grid[i][j]) + " ", end="")
             print("\n")
 
-    def __nextEmpty(self):
+    def __nextEmpty(self):                          # Returns the next empty pair of coordinates on the grid
         for i in range(len(self.grid)):
             for j in range(len(self.grid[0])):
                 if self.grid[i][j] == '.':
@@ -27,7 +35,7 @@ class Board:
 
         return None
     
-    def isValid(self, num, pos):
+    def isValid(self, num, pos):                    # Checks if the placement is valid; checks the column, row, and subset of duplicate numbers
 
         for i in range(len(self.grid[0])):
             if self.grid[pos[0]][i] == num and pos[1] != i:
@@ -48,7 +56,7 @@ class Board:
         return True
 
 
-    def generate(self, difficulty): 
+    def generate(self, difficulty):                 # Generates a board by inserting random numbers in diagonal subset boxes
         self.grid = [['.' for i in range(9)] for j in range(9)]
 
         _l = list(range(1, 10))
@@ -72,10 +80,10 @@ class Board:
                 self.grid[_y][_x] = _num
                 _l.remove(_num)
             
-        self.solve(self)
-        self.removeNumbers(self, difficulty)
+        self.solve(self)                        # Then solves the rest of the board to make sure there is a valid solution
+        self.removeNumbers(self, difficulty)    # Removes the amount of numbers based on the difficulty
 
-    def removeNumbers(self, difficulty): 
+    def removeNumbers(self, difficulty):        # Removes numbers of the diagonal subset first, then at random until the difficulty amount is reached
             
         if difficulty == 0:
             _squares_to_remove = 36
@@ -122,7 +130,7 @@ class Board:
 
         return self.grid
 
-    def solve(self):
+    def solve(self):                           # Solves the board through backtracking
         _find = self.__nextEmpty(self)
         if not _find:
             return True
